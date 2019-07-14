@@ -6,7 +6,7 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.view.SurfaceView
 
-class SensorHandler: SensorEventListener {
+class SensorHandler : SensorEventListener {
 
     override fun onSensorChanged(p0: SensorEvent?) {
 

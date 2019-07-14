@@ -10,8 +10,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // todo
-        // setting of surface view, fullscreen
-        // sensor handler
+        // fullscreen
+        // setting of surface view
+        // sensor handler initialization
     }
 
     private fun draw() {
@@ -20,13 +21,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun detectWin() {
-
-        // detection of win
+        // todo
     }
 
     private fun detectFails() {
-
-        // detection of fail
+        // todo
     }
 
     override fun onResume() {
@@ -37,6 +36,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
+
         // removing of callbacks
     }
 }
