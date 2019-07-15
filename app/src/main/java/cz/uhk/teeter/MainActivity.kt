@@ -82,8 +82,8 @@ class MainActivity : AppCompatActivity() {
             val ball = Ball()
             ball.radius = BALL_RADIUS
             ball.position = Point2D()
-            ball.position.x = surfaceView.width/2
-            ball.position.y = surfaceView.height/2
+            ball.position.x = surfaceView.width/2f
+            ball.position.y = surfaceView.height/2f
 
             handler = SensorHandler()
             handler.init(surfaceView, Level(), ball)

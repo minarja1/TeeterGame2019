@@ -3,7 +3,7 @@ package cz.uhk.teeter
 class Point2D {
 
     // x, y // it is just a container for coordinates
-    var x: Int = 0
-    var y: Int = 0
+    var x: Float = 0F
+    var y: Float = 0F
 
 }

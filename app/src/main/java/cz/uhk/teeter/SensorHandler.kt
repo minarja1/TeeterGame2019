@@ -1,11 +1,14 @@
 package cz.uhk.teeter
 
 import android.content.Context
+import android.content.res.Resources
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.view.Surface
 import android.view.SurfaceView
+import android.view.WindowManager
 
 class SensorHandler : SensorEventListener {
 
@@ -21,6 +24,9 @@ class SensorHandler : SensorEventListener {
     val gravity = floatArrayOf(0f, 0f, 0f)
 
     var lastMillis = 0L
+
+    var orientation: Int = 0
+    var density: Int = 0
 
     override fun onSensorChanged(event: SensorEvent?) {
 
@@ -62,12 +68,46 @@ class SensorHandler : SensorEventListener {
             val newVelocityX = gravity[0] * deltaTime
             val newVelocityY = gravity[1] * deltaTime
 
-            // TODO handle friction by NOISE (later)
-            val nowFriction = FRICTION
+            var nowFriction = FRICTION
+            if (gravity[0] > -NOISE && gravity[0] < NOISE
+                && gravity[1] > -NOISE && gravity[1] < NOISE
+            ) {
+                nowFriction = 0.97f
+            } else {
+                nowFriction = FRICTION
+            }
 
-            // TODO handle orientation
+            var xValue = 0f
+            var yValue = 0f
+            when (orientation) {
+                Surface.ROTATION_0 -> {
+                    xValue = newVelocityX
+                    yValue = newVelocityY
+                }
+                Surface.ROTATION_90 -> {
+                    xValue = -newVelocityY
+                    yValue = newVelocityX
 
-            // TODO the new position of the ball
+                }
+                Surface.ROTATION_180 -> {
+                    xValue = -newVelocityX
+                    yValue = -newVelocityY
+                }
+                else -> {
+                    xValue = newVelocityY
+                    yValue = -newVelocityX
+                }
+            }
+
+            //v = v0 + a * t
+            var velX = ball.velocityX * nowFriction + xValue
+            var velY = ball.velocityY * nowFriction + yValue
+
+            ball.velocityX = ((ALPHA * ball.velocityX) + (1 - ALPHA) * velX)
+            ball.velocityY = ((ALPHA * ball.velocityY) + (1 - ALPHA) * velY)
+
+            ball.position.x = ball.position.x - velX * deltaTime
+            ball.position.y = ball.position.y + velY * deltaTime
 
             // TODO handle collisions with obstacles
 
@@ -77,6 +117,11 @@ class SensorHandler : SensorEventListener {
     }
 
     fun init(surfaceView: SurfaceView, level: Level, ball: Ball) {
+
+        val windowManager = surfaceView.context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        orientation = windowManager.defaultDisplay.rotation
+
+        density = Resources.getSystem().displayMetrics.densityDpi
 
         this.ball = ball
 
