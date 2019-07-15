@@ -86,8 +86,7 @@ class MainActivity : AppCompatActivity() {
             ball.position.y = surfaceView.height/2
 
             handler = SensorHandler()
-            level = Level()
-            handler.init(surfaceView, level, ball)
+            handler.init(surfaceView, Level(), ball)
             init = true
         }
 
