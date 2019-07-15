@@ -62,7 +62,16 @@ class SensorHandler : SensorEventListener {
             val newVelocityX = gravity[0] * deltaTime
             val newVelocityY = gravity[1] * deltaTime
 
+            // TODO handle friction by NOISE (later)
+            val nowFriction = FRICTION
 
+            // TODO handle orientation
+
+            // TODO the new position of the ball
+
+            // TODO handle collisions with obstacles
+
+            // TODO - enjoy your lunch!
         }
 
     }
