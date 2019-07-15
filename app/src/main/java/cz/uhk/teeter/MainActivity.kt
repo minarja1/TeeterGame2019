@@ -58,9 +58,11 @@ class MainActivity : AppCompatActivity() {
 
         canvas.drawColor(Color.WHITE)
 
-        canvas.drawCircle(handler.ball.position.x.toFloat(),
-            handler.ball.position.y.toFloat(),
-            handler.ball.radius.toFloat(), paint)
+        canvas.drawCircle(
+            handler.ball.position.x.metersToPx,
+            handler.ball.position.y.metersToPx,
+            handler.ball.radius.toFloat(), paint
+        )
 
         surfaceView.holder.unlockCanvasAndPost(canvas)
 
@@ -82,15 +84,15 @@ class MainActivity : AppCompatActivity() {
             val ball = Ball()
             ball.radius = BALL_RADIUS
             ball.position = Point2D()
-            ball.position.x = surfaceView.width/2f
-            ball.position.y = surfaceView.height/2f
+            ball.position.x = surfaceView.width / 2f
+            ball.position.y = surfaceView.height / 2f
 
             handler = SensorHandler()
             handler.init(surfaceView, Level(), ball)
             init = true
         }
 
-        handlerOs.postDelayed(runnable, 1000/FPS)
+        handlerOs.postDelayed(runnable, 1000 / FPS)
         // loading of level in try catch
     }
 

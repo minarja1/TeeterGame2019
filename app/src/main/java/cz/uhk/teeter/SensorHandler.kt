@@ -23,12 +23,18 @@ class SensorHandler : SensorEventListener {
     val ALPHA = 0.8f
     val gravity = floatArrayOf(0f, 0f, 0f)
 
-    var lastMillis = 0L
+    var lastMillis = System.currentTimeMillis()
 
     var orientation: Int = 0
     var density: Int = 0
 
+    // for detection of collisions with sides of screen
+    var width = 0F
+    var height = 0F
+
     override fun onSensorChanged(event: SensorEvent?) {
+
+        // TODO if (ballLocked)
 
         val nowMillis = System.currentTimeMillis()
 
@@ -51,9 +57,7 @@ class SensorHandler : SensorEventListener {
             // gravity[0] = -1.2, gravity[1] = 0.8, gravity[2] = 7.3
             // gravity[0] + gravity[1] + gravity[2] = 1.
 
-            val sum = Math.abs(gravity[0])
-            +Math.abs(gravity[1])
-            +Math.abs(gravity[2])
+            val sum = (Math.abs(gravity[0])+Math.abs(gravity[1])+Math.abs(gravity[2]))
 
             // changing values to have 9.8 in total x+y+z
             gravity[0] = (gravity[0] / sum * GRAVITY)
@@ -106,12 +110,14 @@ class SensorHandler : SensorEventListener {
             ball.velocityX = ((ALPHA * ball.velocityX) + (1 - ALPHA) * velX)
             ball.velocityY = ((ALPHA * ball.velocityY) + (1 - ALPHA) * velY)
 
+            lastMillis = nowMillis
+
             ball.position.x = ball.position.x - velX * deltaTime
             ball.position.y = ball.position.y + velY * deltaTime
 
+
             // TODO handle collisions with obstacles
 
-            // TODO - enjoy your lunch!
         }
 
     }
@@ -135,6 +141,12 @@ class SensorHandler : SensorEventListener {
             manager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
             SensorManager.SENSOR_DELAY_FASTEST
         )
+
+        this.ball.position.x = this.ball.position.x.pxToMeters
+        this.ball.position.y = this.ball.position.y.pxToMeters
+
+        width = (surfaceView.width - ball.radius).toFloat().pxToMeters
+        height = (surfaceView.height - ball.radius).toFloat().pxToMeters
 
     }
 
