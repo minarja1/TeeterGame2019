@@ -9,6 +9,8 @@ import android.view.SurfaceView
 
 class SensorHandler : SensorEventListener {
 
+    lateinit var ball:Ball
+
     override fun onSensorChanged(event: SensorEvent?) {
 
         // calculation of velocity, acceleration and ball position
@@ -28,6 +30,8 @@ class SensorHandler : SensorEventListener {
     }
 
     fun init(surfaceView: SurfaceView, level: Level, ball: Ball) {
+
+        this.ball = ball
 
         // initialization of a game
 
