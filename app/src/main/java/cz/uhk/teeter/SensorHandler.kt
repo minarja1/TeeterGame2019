@@ -57,7 +57,7 @@ class SensorHandler : SensorEventListener {
             // gravity[0] = -1.2, gravity[1] = 0.8, gravity[2] = 7.3
             // gravity[0] + gravity[1] + gravity[2] = 1.
 
-            val sum = (Math.abs(gravity[0])+Math.abs(gravity[1])+Math.abs(gravity[2]))
+            val sum = (Math.abs(gravity[0]) + Math.abs(gravity[1]) + Math.abs(gravity[2]))
 
             // changing values to have 9.8 in total x+y+z
             gravity[0] = (gravity[0] / sum * GRAVITY)
@@ -115,6 +115,28 @@ class SensorHandler : SensorEventListener {
             ball.position.x = ball.position.x - velX * deltaTime
             ball.position.y = ball.position.y + velY * deltaTime
 
+            //handle collisions with sides of screen
+
+            //LEFT
+            if (ball.position.x < ball.radius.toFloat().pxToMeters) {
+                ball.position.x = ball.radius.toFloat().pxToMeters
+                ball.velocityX = ball.velocityX * (-REFLECTION)
+            }
+            //RIGHT
+            else if (ball.position.x > width) {
+                ball.position.x = width
+                ball.velocityX = ball.velocityX * (-REFLECTION)
+            }
+            //TOP
+            else if (ball.position.y < ball.radius.toFloat().pxToMeters) {
+                ball.position.y = ball.radius.toFloat().pxToMeters
+                ball.velocityY = ball.velocityY * (-REFLECTION)
+            }
+            //BOTTOM
+            else if (ball.position.y > height) {
+                ball.position.y = height
+                ball.velocityY = ball.velocityY * (-REFLECTION)
+            }
 
             // TODO handle collisions with obstacles
 
