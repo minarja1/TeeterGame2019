@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.Window
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -96,6 +97,15 @@ class MainActivity : AppCompatActivity() {
             paint
         )
 
+        //endingPoint
+        paint.setColor(Color.RED)
+        canvas.drawCircle(
+            level.endPosition.x,
+            level.endPosition.y,
+            HOLE_RADIUS.toFloat(),
+            paint
+        )
+
         // ball
         paint.setColor(Color.GRAY)
         canvas.drawCircle(
@@ -109,7 +119,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun detectWin() {
-        // todo
+        val position = Point2D().apply {
+            x = handler.ball.position.x.metersToPx
+            y = handler.ball.position.y.metersToPx
+        }
+
+        if (Math.sqrt(
+                (Math.pow(level.endPosition.x.toDouble() - position.x, 2.0)) +
+                        (Math.pow(level.endPosition.y.toDouble() - position.y, 2.0))
+            ) < HOLE_RADIUS + BALL_RADIUS
+        ) {
+            handler.lockBall()
+            Toast.makeText(this, "You win!!!", Toast.LENGTH_LONG).show()
+            //todo load next level
+        }
     }
 
     private fun detectFails() {
@@ -138,28 +161,11 @@ class MainActivity : AppCompatActivity() {
 
         surfaceView.post {
 
-            level = Level().apply {
-                obstacles.add(
-                    Obstacle().apply {
-                        x = 200
-                        y = 300
-                        x2 = 800
-                        y2 = 600
-                    }
-                )
-                holes.add(
-                    Hole().apply {
-                        positionInMeters = Point2D().apply {
-                            x = 800f
-                            y = 900f
-                        }
-                    }
-                )
-                startingPosition = Point2D().apply {
-                    x = 120f
-                    y = 1000f
-                }
-            }
+            level = Level.loadFromAssets(
+                this@MainActivity,
+                "level_1.txt",
+                surfaceView.width, surfaceView.height
+            )
 
             // later level init
             val ball = Ball()
