@@ -56,8 +56,21 @@ class MainActivity : AppCompatActivity() {
         // drawing of ball, obstacles, holes, ...
         val canvas = surfaceView.holder.lockCanvas()
 
+        // clear of canvas
         canvas.drawColor(Color.WHITE)
 
+        // obstacles
+        paint.setColor(Color.BLACK)
+        for (obstacle in level.obstacles) {
+            canvas.drawRect(obstacle.x.toFloat(),
+                obstacle.y.toFloat(),
+                obstacle.x2.toFloat(),
+                obstacle.y2.toFloat(),
+                paint)
+        }
+
+        // ball
+        paint.setColor(Color.GRAY)
         canvas.drawCircle(
             handler.ball.position.x.metersToPx,
             handler.ball.position.y.metersToPx,
@@ -80,6 +93,18 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
 
         surfaceView.post {
+
+            level = Level().apply {
+                obstacles.add(
+                    Obstacle().apply {
+                        x = 200
+                        y = 300
+                        x2 = 800
+                        y2 = 600
+                    }
+                )
+            }
+
             // later level init
             val ball = Ball()
             ball.radius = BALL_RADIUS
@@ -87,8 +112,9 @@ class MainActivity : AppCompatActivity() {
             ball.position.x = surfaceView.width / 2f
             ball.position.y = surfaceView.height / 2f
 
+
             handler = SensorHandler()
-            handler.init(surfaceView, Level(), ball)
+            handler.init(surfaceView, level, ball)
             init = true
         }
 

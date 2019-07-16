@@ -2,10 +2,14 @@ package cz.uhk.teeter
 
 class Obstacle {
 
-    // coordinates of obstacles
+    var x = 0
+    var y = 0
+    var x2 = 0
+    var y2 = 0
 
-    private fun handleCollisions(ball: Ball, density: Int) {
+    fun handleCollisions(ball: Ball) {
 
         // handling of collisions with ball
+        // TODO handling collisions
     }
 }

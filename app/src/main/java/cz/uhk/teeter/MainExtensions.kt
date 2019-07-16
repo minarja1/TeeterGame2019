@@ -11,7 +11,7 @@ val Int.px: Int
 
 // 39f Dots Per Inches (39 inches = 1m)
 val Float.metersToPx: Float
-    get() = (this * 39f * Resources.getSystem().displayMetrics.density)
+    get() = (this * 39f * Resources.getSystem().displayMetrics.densityDpi)
 
 val Float.pxToMeters: Float
-    get() = (this / Resources.getSystem().displayMetrics.density / 39f)
+    get() = (this / Resources.getSystem().displayMetrics.densityDpi / 39f)

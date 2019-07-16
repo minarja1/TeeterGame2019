@@ -13,6 +13,7 @@ import android.view.WindowManager
 class SensorHandler : SensorEventListener {
 
     lateinit var ball: Ball
+    lateinit var level: Level
 
     val FRICTION = 0.95f
     val REFLECTION = 0.99f
@@ -138,7 +139,10 @@ class SensorHandler : SensorEventListener {
                 ball.velocityY = ball.velocityY * (-REFLECTION)
             }
 
-            // TODO handle collisions with obstacles
+            // handle collisions with obstacles
+            for (obstacle in level.obstacles) {
+                obstacle.handleCollisions(ball)
+            }
 
         }
 
@@ -152,6 +156,7 @@ class SensorHandler : SensorEventListener {
         density = Resources.getSystem().displayMetrics.densityDpi
 
         this.ball = ball
+        this.level = level
 
         // initialization of a game
 
