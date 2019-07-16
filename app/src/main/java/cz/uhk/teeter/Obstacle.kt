@@ -23,13 +23,39 @@ class Obstacle {
             && ballPosition.y > y - ball.radius
             && ballPosition.y < y2 + ball.radius
         ) {
+            ball.position.x = (x - ball.radius).toFloat().pxToMeters
+            ball.velocityX = ball.velocityX * (-REFLECTION)
+        }
+
+        // right
+        else if (ballPosition.x < x2 + ball.radius
+            && ballPosition.x > x2 - ball.radius
+            && ballPosition.y > y - ball.radius
+            && ballPosition.y < y2 + ball.radius
+        ) {
             ball.position.x = (x2 + ball.radius).toFloat().pxToMeters
             ball.velocityX = ball.velocityX * (-REFLECTION)
         }
 
-        // todo right
-        // todo top
-        // todo bottom
+        // top
+        else if (ballPosition.x > x - ball.radius
+            && ballPosition.x < x2 + ball.radius
+            && ballPosition.y > y - ball.radius
+            && ballPosition.y < y + ball.radius
+        ) {
+            ball.position.y = (y - ball.radius).toFloat().pxToMeters
+            ball.velocityY = ball.velocityY * (-REFLECTION)
+        }
+
+        // bottom
+        else if (ballPosition.x > x - ball.radius
+            && ballPosition.x < x2 + ball.radius
+            && ballPosition.y < y2 + ball.radius
+            && ballPosition.y > y2 - ball.radius
+        ) {
+            ball.position.y = (y2 + ball.radius).toFloat().pxToMeters
+            ball.velocityY = ball.velocityY * (-REFLECTION)
+        }
 
     }
 }
