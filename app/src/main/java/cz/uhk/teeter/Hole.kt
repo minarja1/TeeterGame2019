@@ -2,5 +2,5 @@ package cz.uhk.teeter
 
 class Hole {
 
-    // position
+    lateinit var positionInMeters: Point2D
 }

@@ -33,9 +33,13 @@ class SensorHandler : SensorEventListener {
     var width = 0F
     var height = 0F
 
-    override fun onSensorChanged(event: SensorEvent?) {
+    var ballLocked = true
 
-        // TODO if (ballLocked)
+    override fun onSensorChanged(event: SensorEvent?) {
+        if (ballLocked) {
+            lastMillis = System.currentTimeMillis()
+            return
+        }
 
         val nowMillis = System.currentTimeMillis()
 
@@ -169,8 +173,8 @@ class SensorHandler : SensorEventListener {
             SensorManager.SENSOR_DELAY_FASTEST
         )
 
-        this.ball.position.x = this.ball.position.x.pxToMeters
-        this.ball.position.y = this.ball.position.y.pxToMeters
+        this.ball.position.x = level.startingPosition.x.pxToMeters
+        this.ball.position.y = level.startingPosition.y.pxToMeters
 
         width = (surfaceView.width - ball.radius).toFloat().pxToMeters
         height = (surfaceView.height - ball.radius).toFloat().pxToMeters
@@ -185,8 +189,27 @@ class SensorHandler : SensorEventListener {
         }
     }
 
+    fun lockBall() {
+        ballLocked = true
+    }
+
+    fun resetBall() {
+        // this moves ball to starting position of a level
+        level.startingPosition.let {
+            ball.position = Point2D().apply {
+                this.x = it.x.pxToMeters
+                this.y = it.y.pxToMeters
+            }
+            ball.velocityX = 0f
+            ball.velocityY = 0f
+        }
+    }
 
     override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
         // ignored?
+    }
+
+    fun unlockBall() {
+        ballLocked = false
     }
 }

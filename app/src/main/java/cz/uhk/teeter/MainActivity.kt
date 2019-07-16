@@ -13,6 +13,8 @@ class MainActivity : AppCompatActivity() {
 
     private val FPS = 120L
     private val BALL_RADIUS = 20
+    private val HOLE_RADIUS = 30
+
     private lateinit var handler: SensorHandler
     private var init = false
     private lateinit var level: Level
@@ -48,6 +50,10 @@ class MainActivity : AppCompatActivity() {
 
 
         // setting of surface view
+        surfaceView.setOnClickListener {
+            handler.unlockBall()
+        }
+
         // sensor handler initialization
     }
 
@@ -62,12 +68,33 @@ class MainActivity : AppCompatActivity() {
         // obstacles
         paint.setColor(Color.BLACK)
         for (obstacle in level.obstacles) {
-            canvas.drawRect(obstacle.x.toFloat(),
+            canvas.drawRect(
+                obstacle.x.toFloat(),
                 obstacle.y.toFloat(),
                 obstacle.x2.toFloat(),
                 obstacle.y2.toFloat(),
-                paint)
+                paint
+            )
         }
+
+        //holes
+        for (hole in level.holes) {
+            canvas.drawCircle(
+                hole.positionInMeters.x,
+                hole.positionInMeters.y,
+                HOLE_RADIUS.toFloat(),
+                paint
+            )
+        }
+
+        //startingPoint
+        paint.setColor(Color.GREEN)
+        canvas.drawCircle(
+            level.startingPosition.x,
+            level.startingPosition.y,
+            HOLE_RADIUS.toFloat(),
+            paint
+        )
 
         // ball
         paint.setColor(Color.GRAY)
@@ -86,7 +113,24 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun detectFails() {
-        // todo
+
+        val position = Point2D().apply {
+            x = handler.ball.position.x.metersToPx
+            y = handler.ball.position.y.metersToPx
+        }
+
+        for (hole in level.holes) {
+            // c = sqrt((x2-x1)^2 + (y2-y1)^2)
+            if (Math.sqrt(
+                    (Math.pow(hole.positionInMeters.x.toDouble() - position.x, 2.0)) +
+                            (Math.pow(hole.positionInMeters.y.toDouble() - position.y, 2.0))
+                ) < HOLE_RADIUS + BALL_RADIUS
+            ) {
+                handler.lockBall()
+                handler.resetBall()
+                break
+            }
+        }
     }
 
     override fun onResume() {
@@ -103,6 +147,18 @@ class MainActivity : AppCompatActivity() {
                         y2 = 600
                     }
                 )
+                holes.add(
+                    Hole().apply {
+                        positionInMeters = Point2D().apply {
+                            x = 800f
+                            y = 900f
+                        }
+                    }
+                )
+                startingPosition = Point2D().apply {
+                    x = 120f
+                    y = 1000f
+                }
             }
 
             // later level init
