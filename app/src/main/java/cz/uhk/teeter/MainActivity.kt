@@ -23,6 +23,8 @@ class MainActivity : AppCompatActivity() {
         color = Color.BLACK
     }
 
+    private var levelNumber = 1
+
     private val handlerOs = Handler()
     private val runnable: Runnable = object : Runnable {
         override fun run() {
@@ -130,8 +132,19 @@ class MainActivity : AppCompatActivity() {
             ) < HOLE_RADIUS + BALL_RADIUS
         ) {
             handler.lockBall()
-            Toast.makeText(this, "You win!!!", Toast.LENGTH_LONG).show()
-            //todo load next level
+            if (levelNumber < 5) {
+                levelNumber++
+                level = Level.loadFromAssets(
+                    this@MainActivity,
+                    "level_$levelNumber.txt",
+                    surfaceView.width, surfaceView.height
+                )
+                handler.init(surfaceView, level, handler.ball)
+                handler.resetBall()
+            } else {
+                Toast.makeText(this, "You win!!!", Toast.LENGTH_LONG).show()
+            }
+
         }
     }
 
@@ -163,7 +176,7 @@ class MainActivity : AppCompatActivity() {
 
             level = Level.loadFromAssets(
                 this@MainActivity,
-                "level_1.txt",
+                "level_$levelNumber.txt",
                 surfaceView.width, surfaceView.height
             )
 
