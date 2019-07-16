@@ -8,6 +8,7 @@ import android.os.Handler
 import android.view.Window
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -61,16 +62,24 @@ class MainActivity : AppCompatActivity() {
         }
 
         surfaceView.setOnLongClickListener {
-            levelNumber = 1
-            getPreferences(Context.MODE_PRIVATE).edit()
-                .putInt(LEVEL_KEY, levelNumber).commit()
-            level = Level.loadFromAssets(
-                this@MainActivity,
-                "level_$levelNumber.txt",
-                surfaceView.width, surfaceView.height
-            )
-            handler.init(surfaceView, level, handler.ball)
-            handler.resetBall()
+            AlertDialog.Builder(it.context)
+                .setTitle("Reset the game")
+                .setMessage("Do you want to reset the game?")
+                .setPositiveButton("Yes, please") { _, _ ->
+                    levelNumber = 1
+                    getPreferences(Context.MODE_PRIVATE).edit()
+                        .putInt(LEVEL_KEY, levelNumber).commit()
+                    level = Level.loadFromAssets(
+                        this@MainActivity,
+                        "level_$levelNumber.txt",
+                        surfaceView.width, surfaceView.height
+                    )
+                    handler.init(surfaceView, level, handler.ball)
+                    handler.resetBall()
+                }
+                .setNegativeButton("No, thank you", null)
+                .show()
+            handler.lockBall()
             true
         }
 
