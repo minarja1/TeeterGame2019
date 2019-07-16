@@ -1,5 +1,6 @@
 package cz.uhk.teeter
 
+import android.content.Context
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
@@ -15,6 +16,8 @@ class MainActivity : AppCompatActivity() {
     private val FPS = 120L
     private val BALL_RADIUS = 20
     private val HOLE_RADIUS = 30
+
+    private val LEVEL_KEY = "LEVEL_KEY"
 
     private lateinit var handler: SensorHandler
     private var init = false
@@ -57,7 +60,23 @@ class MainActivity : AppCompatActivity() {
             handler.unlockBall()
         }
 
-        // sensor handler initialization
+        surfaceView.setOnLongClickListener {
+            levelNumber = 1
+            getPreferences(Context.MODE_PRIVATE).edit()
+                .putInt(LEVEL_KEY, levelNumber).commit()
+            level = Level.loadFromAssets(
+                this@MainActivity,
+                "level_$levelNumber.txt",
+                surfaceView.width, surfaceView.height
+            )
+            handler.init(surfaceView, level, handler.ball)
+            handler.resetBall()
+            true
+        }
+
+        //get level number from preferences
+        levelNumber = getPreferences(Context.MODE_PRIVATE)
+            .getInt(LEVEL_KEY, 1)
     }
 
     private fun draw() {
@@ -134,6 +153,9 @@ class MainActivity : AppCompatActivity() {
             handler.lockBall()
             if (levelNumber < 5) {
                 levelNumber++
+                //store level number in preferences
+                getPreferences(Context.MODE_PRIVATE).edit()
+                    .putInt(LEVEL_KEY, levelNumber).commit()
                 level = Level.loadFromAssets(
                     this@MainActivity,
                     "level_$levelNumber.txt",
